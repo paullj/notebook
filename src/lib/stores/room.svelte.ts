@@ -23,10 +23,10 @@ class Room {
     this._roomID = YJS_PREFIX + roomID;
 
     this._provider = new WebrtcProvider(this._roomID, this._document);
-    // this._persistance = new IndexeddbPersistence(this._roomID, this._document);
-    // this._persistance.whenSynced.then(() => {
-    //   console.log("IndexedDB synced");
-    // });
+    this._persistance = new IndexeddbPersistence(this._roomID, this._document);
+    this._persistance.whenSynced.then(() => {
+      console.log("IndexedDB synced");
+    });
     this._provider.awareness.on("change", () => this.handleAwarenessChange());
     this._provider?.connect();
   }
