@@ -6,6 +6,7 @@
 	import { room } from '$lib/stores/room.svelte';
 	import CodeMirror from '$lib/components/CodeMirror.svelte';
 	import type { CellData } from '$lib/types/cell';
+	import Cell from './Cell.svelte';
 
 	const { id, content } = $props<Omit<CellData, 'type'>>();
 
@@ -17,22 +18,26 @@
 </script>
 
 {#if cell}
-	<div class="flex w-full space-x-4 items-start">
-		<div class="w-1/2 h-full">
+	<Cell>
+		<span slot="leftTitle">Markdown</span>
+		<span slot="rightTitle">Preview</span>
+		<span slot="leftPanel">
 			<CodeMirror
 				lang={markdown()}
 				content={intitialContent}
 				extensions={[yCollab(cell.syncedContent, room.awareness)]}
 			/>
-		</div>
-		<div class="w-1/2 text-sm prose">
-			{#if content || content?.trim() === ''}
-				{@html marked.parse(content)}
+		</span>
+		<div slot="rightPanel" class="px-2 py-1">
+			{#if content && content.trim() !== ''}
+				<div class="text-sm prose">
+					{@html marked.parse(content)}
+				</div>
 			{:else}
-				<p>Empty cell</p>
+				<p class="text-gray-300 font-mono text-xs">Empty cell</p>
 			{/if}
 		</div>
-	</div>
+	</Cell>
 {:else}
 	<p>Cell not found</p>
 {/if}

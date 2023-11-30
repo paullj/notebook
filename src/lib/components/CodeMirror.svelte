@@ -18,13 +18,19 @@
 	let editorState: EditorState | undefined;
 	let parent: HTMLDivElement | undefined;
 
+	const theme = EditorView.theme({
+		'&.cm-focused': {
+			outline: 'none'
+		}
+	});
+
 	$effect(() => {
 		if (!parent) return;
 
 		editorState = EditorState.create({
 			doc: content ?? '',
 			selection: { anchor: 0, head: 0 },
-			extensions: [basicSetup, lang, ...extensions]
+			extensions: [basicSetup, lang, theme, ...extensions]
 		});
 
 		editorView = new EditorView({

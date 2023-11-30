@@ -16,6 +16,8 @@ class Notebook {
   );
   private _cellMap = room.document.getMap<SyncedCell>("cell-map");
 
+  isRunning = $derived(Object.values(this._outputs).some((output) => ['running', 'queued'].includes(output.executionState)));
+
   get cells() { return this._cells; }
   get outputs() { return this._outputs; }
 
@@ -81,6 +83,10 @@ class Notebook {
       return this._outputs[id];
     else
       return null
+  }
+
+  public executeAll() {
+    this._cells.filter(cell => cell.type === 'python').forEach((cell) => this.executeCell(cell.id));
   }
 
   public executeCell(id: string) {
