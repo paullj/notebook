@@ -2,6 +2,7 @@ import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { IndexeddbPersistence } from 'y-indexeddb';
 import { User } from "./user.svelte";
+import { browser } from "$app/environment";
 
 const YJS_PREFIX = "yjs-notebook-" as const;
 
@@ -9,8 +10,9 @@ class Room {
   private _roomID = "";
   private _document: Y.Doc = $state(new Y.Doc());
   private _provider: WebrtcProvider | null = $state(null);
-  private _persistance: IndexeddbPersistence | null = $state(null);
+  private _persistance: IndexeddbPersistence | null = null;
   private _users: Record<string, User> = $state({});
+  private _isSynced = $state(false);
 
   isConnected = $derived(this._provider?.connected ?? false)
   clientID = $derived(this._document?.clientID.toString() ?? null)
@@ -18,16 +20,33 @@ class Room {
   get awareness() { return this._provider?.awareness; }
   get document() { return this._document; }
   get users() { return this._users; }
+  get isSynced() { return this._isSynced; }
+
+  constructor() {
+    // 
+  }
+
+  public load() {
+    if (!browser) {
+      console.log("Not in browser, not loading IndexedDB")
+      return;
+    }
+
+    this._persistance = new IndexeddbPersistence('notebook', this._document);
+    this._persistance.whenSynced.then(() => {
+      this._isSynced = true;
+    });
+  }
 
   public connect(roomID: string) {
     this._roomID = YJS_PREFIX + roomID;
 
-    this._provider = new WebrtcProvider(this._roomID, this._document);
+    // this._provider = new WebrtcProvider(this._roomID, this._document);
     this._persistance = new IndexeddbPersistence(this._roomID, this._document);
     this._persistance.whenSynced.then(() => {
       console.log("IndexedDB synced");
     });
-    this._provider.awareness.on("change", () => this.handleAwarenessChange());
+    this._provider?.awareness.on("change", () => this.handleAwarenessChange());
     this._provider?.connect();
   }
 

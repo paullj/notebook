@@ -5,47 +5,59 @@
 	import { room } from '$lib/stores/room.svelte';
 	import CodeMirror from '$lib/components/CodeMirror.svelte';
 	import type { CellData } from '$lib/types/cell';
+	import Cell from './Cell.svelte';
+	import Output from './Output.svelte';
 
 	const { id } = $props<Omit<CellData, 'type' | 'content'>>();
 	const cell = notebook.getCell(id);
-	const output = $derived(notebook.outputs[id]);
+	const output = $derived(notebook.outputs[id] ?? null);
 	const intitialContent = cell?.content ?? '';
 </script>
 
 {#if cell}
 	<div>
-		<button onclick={() => notebook.executeCell(id)}>Run</button>
-	</div>
-	<div class="flex flex-vol w-full space-x-4">
-		<div class="w-full">
-			<CodeMirror
-				lang={python()}
-				content={intitialContent}
-				extensions={[yCollab(cell.syncedContent, room.awareness)]}
-			/>
+		<div class="flex justify-start items-center mb-1 font-mono text-xs">
+			<button
+				onclick={() => notebook.executeCell(id)}
+				class="px-2 py-0.5 bg-blue-400 rounded-sm uppercase text-white"
+			>
+				Run
+			</button>
 		</div>
-		<div class="w-full">
-			{#if output}
-				<div class="flex space-x-2 font-mono">
-					<p>
-						{output.executionState}
-					</p>
-					<p>
-						[{output.executionIndex}]
-					</p>
-					<p>
-						{output.excecutionDuration} ms
-					</p>
+		<Cell>
+			<span slot="leftTitle">
+				<div class="flex">
+					<div class="uppercase font-mono text-xs">Python</div>
 				</div>
-				<ul>
-					{#each output.values as value}
-						<li>
-							{JSON.stringify(value)}
-						</li>
+			</span>
+			<span slot="rightTitle">
+				[{output?.executionIndex ?? ' '}] Output
+				{#if output.excecutionDuration}
+					({output.excecutionDuration} ms)
+				{/if}
+			</span>
+			<span slot="leftPanel">
+				<CodeMirror
+					lang={python()}
+					content={intitialContent}
+					extensions={[yCollab(cell.syncedContent, room.awareness)]}
+				/>
+			</span>
+			<div slot="rightPanel" class="px-2 py-1 text-xs">
+				{#if output}
+					{#each output.values as { type, format, value }}
+						<Output {type} {format} {value} />
+					{:else}
+						<p class="text-gray-300 font-mono text-xs">
+							Press <code class="px-2 py-0.5 bg-blue-200 text-blue-50 rounded">Run</code> to execute
+							this cell.
+						</p>
 					{/each}
-				</ul>
-			{/if}
-		</div>
+				{:else}
+					<p>Error. No output found for this cell!</p>
+				{/if}
+			</div>
+		</Cell>
 	</div>
 {:else}
 	<p>Cell not found</p>
