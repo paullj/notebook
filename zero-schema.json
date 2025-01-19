@@ -122,7 +122,7 @@
             "optional": true
           },
           "id": {
-            "type": "number",
+            "type": "string",
             "optional": false
           },
           "index": {

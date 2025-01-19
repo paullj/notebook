@@ -1,60 +1,75 @@
 <script lang="ts">
+	import { Button } from '$lib/components/button';
 	import { zero, Query } from '$lib/zero';
+	import Trash from 'phosphor-svelte/lib/Trash';
+	import Code from 'phosphor-svelte/lib/Code';
+	import Markdown from 'phosphor-svelte/lib/MarkdownLogo';
+	import { cellRelations } from '$schema/database';
 
 	const notebook = new Query(
 		zero.query.notebook
 			.where('creator_id', '=', zero.userID)
 			.one()
-			.related('cells')
 			.related('creator')
+			.related('cells', (cells) => cells.orderBy('index', 'asc'))
 	);
 
 	$effect(() => {
-		if (zero.userID === 'anon') {
-			console.log('Not found');
-			return;
-		}
-		if (notebook.data != null) {
-			console.log('Notebook found');
-			return;
-		}
-		if (notebook.status === 'unknown') {
-			console.log('Loading notebook');
-			return;
-		}
-		console.log('Inserting notebook');
+		if (notebook.data != null) return;
+		if (notebook.status === 'unknown') return;
+
 		zero.mutate.notebook.insert({
 			id: crypto.randomUUID(),
 			creator_id: zero.userID
 		});
 	});
 
-	function insertCell(type: 'python' | 'markdown') {
+	function insertCell(type: 'code' | 'markdown') {
 		if (notebook.data == null) return;
 
 		zero.mutate.cell.insert({
-			id: notebook.data?.cells.length ?? 0,
+			id: crypto.randomUUID(),
 			index: notebook.data?.cells.length ?? 0,
 			notebook_id: notebook.data?.id,
-			content: 'print("Hello, World!")',
-			type: 'code'
+			content: type === 'code' ? 'print("Hello, World!")' : '# Hello, World!',
+			type
 		});
+	}
+	function deleteCell(id: string) {
+		zero.mutate.cell.delete({ id });
 	}
 </script>
 
 <div>
 	{#if notebook.status == 'complete'}
-		<h3>
-			{notebook.data?.id} by {notebook.data?.id.slice(0, 6)}
-		</h3>
 		{#each notebook.data?.cells ?? [] as cell}
 			<div>
-				{cell.content}
+				<div class="rounded bg-muted p-2">
+					{#if cell.type === 'code'}
+						<pre>{cell.content}</pre>
+					{:else}
+						{cell.content}
+					{/if}
+				</div>
+				<div class="flex justify-end">
+					<div>
+						{cell.index}
+					</div>
+					<Button size="icon" variant="ghost" onclick={() => deleteCell(cell.id)}>
+						<Trash class="text-destructive" />
+					</Button>
+				</div>
 			</div>
 		{/each}
-		<div>
-			<button onclick={() => insertCell('python')}> Python </button>
-			<button onclick={() => insertCell('markdown')}> Markdown </button>
+
+		<div class="flex items-center justify-center space-x-2">
+			<p>Add</p>
+			<Button size="sm" onclick={() => insertCell('code')}>
+				<Code />
+			</Button>
+			<Button size="sm" onclick={() => insertCell('markdown')}>
+				<Markdown />
+			</Button>
 		</div>
 	{/if}
 </div>

@@ -25,7 +25,7 @@ export const notebooksRelations = relations(notebooks, ({ one, many }) => ({
 export const cellType = pgEnum('cell_type', ['code', 'markdown']);
 
 export const cell = pgTable('cell', {
-	id: integer('id').primaryKey().unique(),
+	id: uuid('id').primaryKey().unique(),
 	index: integer('index').notNull().unique(),
 	notebookID: uuid('notebook_id').references(() => notebooks.id, { onDelete: "cascade" }),
 	content: text('content').default("").notNull(),

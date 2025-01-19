@@ -1,3 +1,29 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 320 7% 8%;
+
+    --muted: 320 4.8% 93%;
+    --muted-foreground: 320 3.8% 34.1%;
+
+    --primary: 320 7% 16%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 163 62% 90%;
+    --secondary-foreground: 170 31% 19%;
+
+    --accent: 320 4.8% 92%;
+    --accent-foreground: 320 7% 16%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --ring: 320 5.9% 64.9%;
+
+    --radius: 0.5rem;
+  }
+}

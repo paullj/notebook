@@ -5,7 +5,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "cell" (
-	"id" integer PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"index" integer NOT NULL,
 	"notebook_id" uuid,
 	"content" text DEFAULT '' NOT NULL,

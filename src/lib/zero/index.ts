@@ -4,13 +4,14 @@ import { Query } from './query.svelte';
 import { env } from '$env/dynamic/public';
 import { schema, type Schema } from '$schema/zero';
 import type { ZeroOptions } from '@rocicorp/zero';
+import { ANON_USER_ID } from '$lib/constants';
 
 if (!env.PUBLIC_ZERO_SERVER_URL) throw new Error('PUBLIC_ZERO_SERVER_URL is not set');
 
 const config = {
   server: env.PUBLIC_ZERO_SERVER_URL,
   schema,
-  userID: 'anon',
+  userID: ANON_USER_ID,
 } satisfies ZeroOptions<Schema>;
 
 const zero = new Zero<Schema>(config);
