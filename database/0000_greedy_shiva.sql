@@ -1,0 +1,38 @@
+DO $$ BEGIN
+ CREATE TYPE "public"."cell_type" AS ENUM('code', 'markdown');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "cell" (
+	"id" integer PRIMARY KEY NOT NULL,
+	"index" integer NOT NULL,
+	"notebook_id" uuid,
+	"content" text DEFAULT '' NOT NULL,
+	"type" "cell_type" DEFAULT 'code' NOT NULL,
+	CONSTRAINT "cell_id_unique" UNIQUE("id"),
+	CONSTRAINT "cell_index_unique" UNIQUE("index")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "notebook" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"creator_id" uuid,
+	CONSTRAINT "notebook_id_unique" UNIQUE("id")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "user" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	CONSTRAINT "user_id_unique" UNIQUE("id")
+);
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "cell" ADD CONSTRAINT "cell_notebook_id_notebook_id_fk" FOREIGN KEY ("notebook_id") REFERENCES "public"."notebook"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "notebook" ADD CONSTRAINT "notebook_creator_id_user_id_fk" FOREIGN KEY ("creator_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;

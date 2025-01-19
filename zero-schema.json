@@ -1,0 +1,214 @@
+{
+  "permissions": {
+    "user": {
+      "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "simple",
+              "left": {
+                "type": "column",
+                "name": "id"
+              },
+              "right": {
+                "type": "static",
+                "anchor": "authData",
+                "field": "sub"
+              },
+              "op": "="
+            }
+          ]
+        ],
+        "insert": [],
+        "update": {
+          "preMutation": [],
+          "postMutation": []
+        },
+        "delete": []
+      }
+    },
+    "cell": {},
+    "notebook": {
+      "row": {
+        "select": [
+          [
+            "allow",
+            {
+              "type": "simple",
+              "left": {
+                "type": "column",
+                "name": "creator_id"
+              },
+              "right": {
+                "type": "static",
+                "anchor": "authData",
+                "field": "sub"
+              },
+              "op": "="
+            }
+          ]
+        ],
+        "update": {
+          "preMutation": [
+            [
+              "allow",
+              {
+                "type": "simple",
+                "left": {
+                  "type": "column",
+                  "name": "creator_id"
+                },
+                "right": {
+                  "type": "static",
+                  "anchor": "authData",
+                  "field": "sub"
+                },
+                "op": "="
+              }
+            ]
+          ],
+          "postMutation": [
+            [
+              "allow",
+              {
+                "type": "simple",
+                "left": {
+                  "type": "column",
+                  "name": "creator_id"
+                },
+                "right": {
+                  "type": "static",
+                  "anchor": "authData",
+                  "field": "sub"
+                },
+                "op": "="
+              }
+            ]
+          ]
+        },
+        "delete": [
+          [
+            "allow",
+            {
+              "type": "simple",
+              "left": {
+                "type": "column",
+                "name": "creator_id"
+              },
+              "right": {
+                "type": "static",
+                "anchor": "authData",
+                "field": "sub"
+              },
+              "op": "="
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "schema": {
+    "version": 1,
+    "tables": {
+      "cell": {
+        "tableName": "cell",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "content": {
+            "type": "string",
+            "optional": true
+          },
+          "id": {
+            "type": "number",
+            "optional": false
+          },
+          "index": {
+            "type": "number",
+            "optional": false
+          },
+          "notebook_id": {
+            "type": "string",
+            "optional": true
+          },
+          "type": {
+            "type": "string",
+            "optional": true
+          }
+        },
+        "relationships": {
+          "notebook": {
+            "sourceField": [
+              "notebook_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "notebook"
+          }
+        }
+      },
+      "notebook": {
+        "tableName": "notebook",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "creator_id": {
+            "type": "string",
+            "optional": true
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "cells": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "notebook_id"
+            ],
+            "destSchema": "cell"
+          },
+          "creator": {
+            "sourceField": [
+              "creator_id"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "user"
+          }
+        }
+      },
+      "user": {
+        "tableName": "user",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {
+          "notebooks": {
+            "sourceField": [
+              "id"
+            ],
+            "destField": [
+              "creator_id"
+            ],
+            "destSchema": "notebook"
+          }
+        }
+      }
+    }
+  }
+}
