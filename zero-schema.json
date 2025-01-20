@@ -125,11 +125,11 @@
             "type": "string",
             "optional": false
           },
-          "index": {
-            "type": "number",
-            "optional": false
-          },
           "notebook_id": {
+            "type": "string",
+            "optional": true
+          },
+          "rank": {
             "type": "string",
             "optional": true
           },

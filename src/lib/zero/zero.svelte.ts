@@ -1,9 +1,9 @@
 import { Zero as BaseZero, type ZeroOptions, type Schema } from '@rocicorp/zero';
 
 export class Zero<T extends Schema> {
-  current: BaseZero<T> = $state(null!);
-  online = $derived(this.current.online);
-  userID = $derived(this.current.userID);
+  #current: BaseZero<T> = $state(null!);
+  online = $derived(this.#current.online);
+  userID = $derived(this.#current.userID);
   #onConnect?: (zero: BaseZero<T>) => void;
 
   constructor(options: ZeroOptions<T>, onConnect?: (zero: BaseZero<T>) => void) {
@@ -15,19 +15,23 @@ export class Zero<T extends Schema> {
     if (typeof options === 'function') {
       options = await options();
     }
-    this.current = new BaseZero<T>(options);
-    this.#onConnect?.(this.current);
+    this.#current = new BaseZero<T>(options);
+    this.#onConnect?.(this.#current);
   }
 
   public async disconnect() {
-    await this.current?.close();
+    await this.#current?.close();
   }
 
   public get query() {
-    return this.current.query;
+    return this.#current.query;
   }
 
   public get mutate() {
-    return this.current.mutate;
+    return this.#current.mutate;
+  }
+
+  public get mutateBatch() {
+    return this.#current.mutateBatch;
   }
 }

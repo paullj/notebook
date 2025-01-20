@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { addIconSelectors, addDynamicIconSelectors } from "@iconify/tailwind";
 
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
@@ -36,5 +37,10 @@ export default {
 			},
 		}
 	},
-	plugins: []
+	plugins: [
+		addIconSelectors({
+			prefixes: ["lets-icons"]
+		}),
+		addDynamicIconSelectors()
+	]
 } satisfies Config;

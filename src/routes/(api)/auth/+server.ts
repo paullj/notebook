@@ -2,7 +2,7 @@
 import { json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { dev } from "$app/environment"
-import * as jwt from '$lib/auth/jwt';
+import * as jwt from '$lib/utils/jwt';
 import * as schema from '$schema/database';
 import { database } from '$lib/server/drizzle';
 import type { RequestHandler } from './$types';

@@ -1,0 +1,1 @@
+ALTER TABLE "cell" ADD COLUMN "rank" text DEFAULT '' NOT NULL;

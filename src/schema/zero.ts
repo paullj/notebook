@@ -20,7 +20,7 @@ export const schema = createSchema(
       },
       cell: {
         id: true,
-        index: true,
+        rank: true,
         content: true,
         notebook_id: true,
         type: true,

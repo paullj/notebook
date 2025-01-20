@@ -1,7 +1,7 @@
 import type { Handle } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import { database } from "$lib/server/drizzle";
-import * as jwt from '$lib/auth/jwt';
+import * as jwt from '$lib/utils/jwt';
 import * as schema from './schema/database';
 
 export const handle: Handle = async ({ event, resolve }) => {

@@ -1,5 +1,5 @@
 {
-  "id": "33429671-8190-40b7-8d9b-e9fae1d24edf",
+  "id": "7c97b9d4-aa66-4f82-9492-407b3c3fe21f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -65,13 +65,6 @@
           "nullsNotDistinct": false,
           "columns": [
             "id"
-          ]
-        },
-        "cell_index_unique": {
-          "name": "cell_index_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "index"
           ]
         }
       }

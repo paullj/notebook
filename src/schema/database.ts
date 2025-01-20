@@ -1,4 +1,4 @@
-import { integer, pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, text, unique, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const users = pgTable('user', {
@@ -26,11 +26,13 @@ export const cellType = pgEnum('cell_type', ['code', 'markdown']);
 
 export const cell = pgTable('cell', {
 	id: uuid('id').primaryKey().unique(),
-	index: integer('index').notNull().unique(),
+	rank: text('rank').notNull(),
 	notebookID: uuid('notebook_id').references(() => notebooks.id, { onDelete: "cascade" }),
 	content: text('content').default("").notNull(),
 	type: cellType("type").notNull().default("code"),
-});
+}, (t) => ({
+	notebookIdRankUnique: unique().on(t.rank, t.notebookID),
+}));
 
 export const cellRelations = relations(cell, ({ one }) => ({
 	notebook: one(notebooks, {
