@@ -4,26 +4,33 @@ import type { Notebook as NotebookSchema, Cell as CellSchema } from "$schema/zer
 import type { Row, Query } from "@rocicorp/zero";
 
 export type Placement = 'above' | 'below';
-
 export type CellType = 'code' | 'markdown';
 
-type InsertCellParams = {
+export type InsertCellParams = {
   type: CellType,
   prev?: string | null,
   next?: string | null
 };
 
-type UpdateCellParams = {
+export type UpdateCellParams = {
   id: string,
   content?: string,
   rank?: string,
 };
 
-type MoveCellParams = {
+export type MoveCellParams = {
   id: string,
   target: number,
   placement: Placement
 };
+
+type NotebookFn<T> = (params: T) => void;
+
+export type InsertCellFn = NotebookFn<InsertCellParams>;
+export type UpdateCellFn = NotebookFn<UpdateCellParams>;
+export type MoveCellFn = NotebookFn<MoveCellParams>;
+export type DeleteCellFn = NotebookFn<string>;
+
 
 type NotebookQueryResult = {
   row: Row<NotebookSchema>;

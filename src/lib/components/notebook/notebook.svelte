@@ -5,7 +5,12 @@
 	import { draggable } from '@thisux/sveltednd';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
-	import { Notebook, type CellType, type Placement } from '$lib/state/notebook.svelte';
+	import {
+		Notebook,
+		type InsertCellParams,
+		type MoveCellParams,
+		type UpdateCellParams
+	} from '$lib/state/notebook.svelte';
 
 	const notebook = new Notebook(
 		zero.query.notebook
@@ -16,12 +21,10 @@
 	);
 
 	const dividerProps = {
-		insertCell: (type: CellType, prev: string | null, next: string | null) =>
-			notebook.insertCell({ type, prev, next }),
-		moveCell: (id: string, target: number, placement: Placement) =>
-			notebook.moveCell({ id, target, placement }),
-		updateCell: (id: string, rank: string) => notebook.updateCell({ id, rank }),
-		deleteCell: (id: string) => notebook.deleteCell(id)
+		onInsert: (p: InsertCellParams) => notebook.insertCell(p),
+		onMove: (p: MoveCellParams) => notebook.moveCell(p),
+		onUpdate: (p: UpdateCellParams) => notebook.updateCell(p),
+		onDelete: (id: string) => notebook.deleteCell(id)
 	};
 </script>
 
@@ -32,7 +35,7 @@
 			<Badge variant="outline" class="font-mono font-thin">{notebook.id}</Badge>
 		</div>
 		{#if notebook.length === 0}
-			<Cell.EmptyAlert onInsert={(type) => notebook.insertCell({ type })} />
+			<Cell.EmptyAlert onInsert={(p) => notebook.insertCell(p)} />
 		{:else}
 			<Cell.Divider {...dividerProps} next={notebook.cells[0].rank} />
 		{/if}

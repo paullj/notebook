@@ -3,17 +3,18 @@
 	import { droppable, type DragDropState, dndState } from '@thisux/sveltednd';
 	import { Trash2, ChevronDown, ChevronUp, CornerDownRight, CornerUpRight } from 'lucide-svelte';
 	import { insert } from '$lib/utils/rank';
-
-	type UpdateCellFn = (id: string, rank: string) => void;
-	type InsertCellFn = (type: 'code' | 'markdown', prev: string | null, next: string | null) => void;
-	type MoveCellFn = (id: string, target: number, placement: 'above' | 'below') => void;
-	type deleteCellFn = (id: string) => void;
+	import type {
+		InsertCellFn,
+		UpdateCellFn,
+		MoveCellFn,
+		DeleteCellFn
+	} from '$lib/state/notebook.svelte';
 
 	type Props = {
-		updateCell: UpdateCellFn;
-		insertCell: InsertCellFn;
-		moveCell: MoveCellFn;
-		deleteCell: deleteCellFn;
+		onUpdate: UpdateCellFn;
+		onInsert: InsertCellFn;
+		onMove: MoveCellFn;
+		onDelete: DeleteCellFn;
 		id?: string;
 		index?: number;
 		prev?: string | null;
@@ -21,22 +22,23 @@
 	};
 
 	const {
-		updateCell,
-		insertCell,
-		moveCell,
-		deleteCell,
+		onUpdate,
+		onInsert,
+		onMove,
+		onDelete,
 		id = undefined,
 		index = undefined,
 		prev = null,
 		next = null
 	}: Props = $props();
+
 	const first = $derived(index === 0);
 	const last = $derived(next === null);
 
 	function handleDrop({ draggedItem, targetContainer }: DragDropState<{ id: string }>) {
 		if (targetContainer == null) return;
 
-		updateCell(draggedItem.id, targetContainer);
+		onUpdate({ id: draggedItem.id, rank: targetContainer });
 	}
 </script>
 
@@ -84,7 +86,7 @@
 				size="xs"
 				variant="outline"
 				tooltip="Add Python cell"
-				onclick={() => insertCell('code', prev, next)}
+				onclick={() => onInsert({ type: 'code', prev, next })}
 			>
 				<p class="text-xs">Python</p>
 			</Button>
@@ -92,7 +94,7 @@
 				size="xs"
 				variant="outline"
 				tooltip="Add Markdown cell"
-				onclick={() => insertCell('markdown', prev, next)}
+				onclick={() => onInsert({ type: 'markdown', prev, next })}
 			>
 				<p class="text-xs">Markdown</p>
 			</Button>
@@ -117,7 +119,7 @@
 				variant="ghost"
 				disabled={first}
 				tooltip="Move cell up"
-				onclick={() => moveCell(id, index - 1, 'above')}
+				onclick={() => onMove({ id, target: index - 1, placement: 'above' })}
 			>
 				<ChevronUp strokeWidth={1} absoluteStrokeWidth />
 			</Button>
@@ -126,11 +128,11 @@
 				variant="ghost"
 				disabled={last}
 				tooltip="Move cell down"
-				onclick={() => moveCell(id, index + 1, 'below')}
+				onclick={() => onMove({ id, target: index + 1, placement: 'below' })}
 			>
 				<ChevronDown strokeWidth={1} absoluteStrokeWidth />
 			</Button>
-			<Button size="xs" variant="ghost" onclick={() => deleteCell(id)} tooltip="Delete cell">
+			<Button size="xs" variant="ghost" onclick={() => onDelete(id)} tooltip="Delete cell">
 				<Trash2 strokeWidth={1} class="text-destructive" absoluteStrokeWidth />
 			</Button>
 		{/if}
