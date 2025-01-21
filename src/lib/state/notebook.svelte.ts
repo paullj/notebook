@@ -3,9 +3,9 @@ import { Query as QueryStore, zero } from "$lib/zero";
 import type { Notebook as NotebookSchema, Cell as CellSchema } from "$schema/zero";
 import type { Row, Query } from "@rocicorp/zero";
 
-type Placement = 'above' | 'below';
+export type Placement = 'above' | 'below';
 
-type CellType = 'code' | 'markdown';
+export type CellType = 'code' | 'markdown';
 
 type InsertCellParams = {
   type: CellType,
