@@ -41,8 +41,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
     secure: !dev,
     sameSite: 'strict',
     path: '/',
-    maxAge: 15 * 60
   });
 
-  return json({ userID, token }, { status: 201 });
+  return json({ userID, token }, { status: 200 });
 };

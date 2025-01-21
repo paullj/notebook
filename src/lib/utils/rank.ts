@@ -1,68 +1,60 @@
 // Based on ranking system in JIRA. Adapated from https://github.com/acadea/lexorank
-export class Rank {
-  #MIN_CHAR: number;
-  #MAX_CHAR: number;
+const MIN_CHAR = '0' as const;
+const MAX_CHAR = 'z' as const;
 
-  constructor(min: string = '0', max: string = 'z  ') {
-    this.#MIN_CHAR = this.#index(min);
-    this.#MAX_CHAR = this.#index(max);
+const MIN_INDEX = index(MIN_CHAR);
+const MAX_INDEX = index(MAX_CHAR);
+
+function index(char: string): number {
+  return char.charCodeAt(0);
+}
+
+function char(index: number): string {
+  return String.fromCharCode(index);
+}
+
+function getChar(str: string, i: number, defaultChar: number): number {
+  if (i >= str.length) {
+    return defaultChar;
+  }
+  return index(str.charAt(i));
+}
+
+function mid(prev: number, next: number): number {
+  return Math.floor((prev + next) / 2);
+}
+
+function insert(prev: string | null, next: string | null): [string, boolean] {
+  if (prev === '' || !prev) {
+    prev = char(MIN_INDEX);
+  }
+  if (next === '' || !next) {
+    next = char(MAX_INDEX);
   }
 
-  insert(prev: string | null, next: string | null): [string, boolean] {
-    if (prev === '' || !prev) {
-      prev = this.#char(this.#MIN_CHAR);
-    }
-    if (next === '' || !next) {
-      next = this.#char(this.#MAX_CHAR);
-    }
+  let rank = '';
+  let i = 0;
 
-    let rank = '';
-    let i = 0;
+  while (true) {
+    const prevChar = getChar(prev, i, MIN_INDEX);
+    const nextChar = getChar(next, i, MAX_INDEX);
 
-    while (true) {
-      const prevChar = this.#getChar(prev, i, this.#MIN_CHAR);
-      const nextChar = this.#getChar(next, i, this.#MAX_CHAR);
-
-      if (prevChar === nextChar) {
-        rank += this.#char(prevChar);
-        i++;
-        continue;
-      }
-
-      const midChar = this.#mid(prevChar, nextChar);
-      if (midChar === prevChar || midChar === nextChar) {
-        rank += this.#char(prevChar);
-        i++;
-        continue;
-      }
-
-      rank += this.#char(midChar);
-      break;
+    if (prevChar === nextChar) {
+      rank += char(prevChar);
+      i++;
+      continue;
     }
 
-    if (rank >= next) {
-      return [prev, false];
+    const midChar = mid(prevChar, nextChar);
+    if (midChar === prevChar || midChar === nextChar) {
+      rank += char(prevChar);
+      i++;
+      continue;
     }
+
+    rank += char(midChar);
     return [rank, true];
   }
+};
 
-  #mid(prev: number, next: number) {
-    return Math.floor((prev + next) / 2);
-  }
-
-  #getChar(str: string, i: number, defaultChar: number) {
-    if (i >= str.length) {
-      return defaultChar;
-    }
-    return this.#index(str.charAt(i));
-  }
-
-  #index(char: string) {
-    return char.charCodeAt(0);
-  }
-
-  #char(byte: number) {
-    return String.fromCharCode(byte);
-  }
-
-}
+export { insert };
