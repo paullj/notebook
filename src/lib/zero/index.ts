@@ -17,7 +17,10 @@ const config = {
 const zero = new Zero<Schema>(config);
 
 zero.connect(async () => {
-  const { userID, token } = await fetch("/auth").then(res => res.json());
+  const repsonse = await fetch("/auth");
+  if (!repsonse.ok) return false;
+  const { userID, token } = await repsonse.json();
+  localStorage.setItem("userID", userID);
   return {
     ...config,
     userID,

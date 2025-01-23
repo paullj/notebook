@@ -131,7 +131,7 @@
           },
           "rank": {
             "type": "string",
-            "optional": true
+            "optional": false
           },
           "type": {
             "type": "string",

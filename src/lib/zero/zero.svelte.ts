@@ -11,9 +11,12 @@ export class Zero<T extends Schema> {
     this.connect(options);
   };
 
-  public async connect(options: ZeroOptions<T> | (() => Promise<ZeroOptions<T>>)) {
+  public async connect(options: ZeroOptions<T> | (() => Promise<ZeroOptions<T> | false>)) {
     if (typeof options === 'function') {
-      options = await options();
+      const fetchedOptions = await options();
+      if (!fetchedOptions)
+        return;
+      options = fetchedOptions;
     }
     this.#current = new BaseZero<T>(options);
     this.#onConnect?.(this.#current);
