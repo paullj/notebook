@@ -1,5 +1,6 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
 	build: {
@@ -10,5 +11,5 @@ export default defineConfig({
 			target: "es2022",
 		},
 	},
-	plugins: [sveltekit()]
+	plugins: [sveltekit(), tailwindcss()]
 });

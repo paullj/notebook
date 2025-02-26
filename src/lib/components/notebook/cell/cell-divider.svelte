@@ -47,9 +47,9 @@
 	{@const disabled =
 		!success || (dndState.isDragging && [before, after].includes(dndState.draggedItem.rank))}
 	<div
-		class="group absolute inset-0 my-auto h-2 w-full rounded-sm bg-muted transition-opacity duration-100"
+		class="group bg-muted absolute inset-0 my-auto h-2 w-full rounded-sm transition-opacity duration-100"
 		class:opacity-0={!dndState.isDragging || disabled}
-		class:dropLineHover={dndState.targetContainer === newRank}
+		class:bg-accent={dndState.targetContainer === newRank}
 		use:droppable={{
 			disabled,
 			container: newRank,
@@ -104,7 +104,7 @@
 
 <div class="relative mt-1 pb-2">
 	<div class="flex items-center justify-between space-x-1" class:opacity-0={dndState.isDragging}>
-		<div class="flex-grow justify-self-start">
+		<div class="grow justify-self-start">
 			{@render newCell(
 				last ? 'Add' : 'Insert',
 				prev,
@@ -141,9 +141,3 @@
 		{@render dropLine(prev, next)}
 	{/if}
 </div>
-
-<style>
-	.dropLineHover {
-		@apply bg-blue-500 dark:bg-blue-700;
-	}
-</style>

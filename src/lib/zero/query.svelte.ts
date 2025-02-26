@@ -7,7 +7,8 @@ import type {
   TableSchema,
   TypedView
 } from '@rocicorp/zero';
-import { deepClone } from './utils/deepClone';
+// import { deepClone } from './utils/deepClone';
+import { cloneDeep } from 'es-toolkit';
 import type { Immutable } from './utils/immutable';
 import type { AdvancedQuery } from '@rocicorp/zero/advanced';
 import { zero } from '.';
@@ -54,7 +55,9 @@ class ViewWrapper<T extends TableSchema, R extends QueryType> {
   }
 
   #onData = (snap: Immutable<Smash<R>>, status: QueryStatus, update: () => void) => {
-    const data = snap === undefined ? snap : (deepClone(snap as ReadonlyJSONValue) as Smash<R>);
+
+    const data = snap === undefined ? snap : (cloneDeep(snap as ReadonlyJSONValue) as Smash<R>);
+    // const data = snap === undefined ? snap : (deepClone(snap as ReadonlyJSONValue) as Smash<R>);
     this.#snapshot = [data, status] as QueryResult<R>;
     // Notify Svelte that the data has changed
     update();

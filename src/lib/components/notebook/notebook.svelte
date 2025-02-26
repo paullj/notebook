@@ -55,7 +55,7 @@
 						container: cell.rank,
 						dragData: cell,
 						attributes: {
-							draggingClass: 'opacity-40 ring ring-ring'
+							draggingClass: 'opacity-40 ring-3 ring-ring'
 						}
 					}}
 				>

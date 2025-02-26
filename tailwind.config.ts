@@ -4,9 +4,9 @@ import tailwindcssAnimate from "tailwindcss-animate";
 import tailwindTypography from "@tailwindcss/typography";
 
 const config: Config = {
-	darkMode: ["class"],
+	darkMode: "class",
 	content: ["./src/**/*.{html,js,svelte,ts}"],
-	safelist: ["dark"],
+	// safelist: ["dark"],
 	theme: {
 		container: {
 			center: true,

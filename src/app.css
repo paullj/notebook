@@ -1,8 +1,47 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+/* @config '../tailwind.config.ts'; */
+
+@theme {
+	--color-background: var(--color-zinc-50);
+	--color-foreground: var(--color-zinc-950);
+
+	--color-primary: var(--color-zinc-900);
+	--color-primary-foreground: var(--color-zinc-50);
+
+	--color-secondary: var(--color-zinc-400);
+	--color-secondary-foreground: var(--color-zinc-950);
+
+	--color-muted: var(--color-zinc-200);
+	--color-muted-foreground: var(--color-zinc-600);
+
+	/*  */
+	--color-accent: var(--color-sky-700);
+	--color-accent-foreground: var(--color-sky-50);
+
+	--color-destructive: var(--color-red-400);
+	--color-destructive-foreground: var(--color-red-50);
+
+	--radius: 0.5rem;
+
+	--color-border: var(--color-red-400);
+	--color-input: var(--color-red-400);
+	--color-ring: var(--color-red-400);
+	--color-popover: var(--color-red-400);
+	--color-popover-foreground: var(--color-red-400);
+	--color-card: var(--color-red-400);
+}
 
 @layer base {
+	* {
+		@apply border-secondary font-light;
+	}
+	body {
+		@apply bg-background text-foreground transition-colors duration-100;
+	}
+}
+
+/* @layer base {
 	:root {
 		--background: 0 0% 100%;
 		--foreground: 240 10% 3.9%;
@@ -74,4 +113,4 @@
 	body {
 		@apply bg-background text-foreground transition-colors duration-100;
 	}
-}
+} */
